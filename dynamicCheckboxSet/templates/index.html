@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+        <input type="checkbox" id="greentext" name="greentext" value="1">
+        <label for="greentext">Green Text</label>
+        <br>
+        <input type="checkbox" id="bluetext" name="bluetext" value="1">
+        <label for="bluetext">Blue Text</label>
+        <br>
+        <input type="checkbox" id="redtext" name="redtext" value="1">
+        <label for="redtext">Red Text</label>
+        <br>
+        <input type="checkbox" id="yellowtext" name="yellowtext" value="1">
+        <label for="yellowtext">Yellow Text</label>
+        <br>
+        <br>
+        <button onclick="loadUpdate()">Update</button>
+        <hr>
+        <dev id="demo"></dev>
+        <script>
+            function loadUpdate() {
+                var gt = "Greentext:" + document.getElementById("greentext").checked;
+                var bt = "Bluetext:" + document.getElementById("bluetext").checked;
+                var rt = "Redtext:" + document.getElementById("redtext").checked;
+                var yt = "Yellowtext:" + document.getElementById("yellowtext").checked;
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var returnData = this.responseText;
+                        var outHtml = ""
+                        var robject = JSON.parse(returnData)
+                        outHtml = ""
+                        for (const key in robject) {
+                            if(robject[key] == 'true') {
+                                var strColor = key.toString()
+                                strColor = strColor.substring(0, strColor.length - 4);
+                                outHtml = outHtml + '<p style="color:'
+                                        + strColor
+                                        + '\">' + key.toString() + '</p>'
+                            }
+                        }
+                        document.getElementById("demo").innerHTML = outHtml;
+                    }
+                };
+                xhttp.open("POST","/updatePage",true);
+                xhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+                xhttp.send(gt + "," + bt + "," + rt + "," + yt); 
+            }
+        </script>
+    </body>
+</html>
